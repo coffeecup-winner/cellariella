@@ -196,7 +196,10 @@ pub fn gui_main() {
 
         let lines = &[
             "Commands:".to_owned(),
-            "  - TODO".to_owned(),
+            "  - Step: <Space>".to_owned(),
+            "  - Auto step: <Shift+Space>".to_owned(),
+            "  - Pick cell: <0..9>".to_owned(),
+            "  - Randomize all: <R>".to_owned(),
             "Logical mouse coords:".to_owned(),
             format!("  - x: {}", mouse_pos_space_x),
             format!("  - y: {}", mouse_pos_space_y),
