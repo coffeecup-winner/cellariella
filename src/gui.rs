@@ -63,6 +63,9 @@ pub fn gui_main() {
     };
     let mut state = GuiState::new(ruleset);
 
+    const STEP_TIME: f64 = 0.150;
+    let mut time = rl.get_time();
+    let mut autostep = false;
     while !rl.window_should_close() {
         // ===== HIT TEST =====
 
@@ -103,7 +106,15 @@ pub fn gui_main() {
                     state.current_cell = Cell(9);
                 }
                 KeyboardKey::KEY_SPACE => {
-                    state.sim.step();
+                    if autostep {
+                        autostep = false;
+                    } else {
+                        if rl.is_key_down(KeyboardKey::KEY_LEFT_SHIFT) {
+                            autostep = true;
+                            time = rl.get_time();
+                        }
+                        state.sim.step();
+                    }
                 }
                 _ => {}
             }
@@ -131,7 +142,13 @@ pub fn gui_main() {
 
         // ===== HANDLING =====
 
-        // TODO
+        if autostep {
+            let curr_time = rl.get_time();
+            if curr_time - time >= STEP_TIME {
+                time = curr_time;
+                state.sim.step();
+            }
+        }
 
         // ===== DRAWING =====
 
