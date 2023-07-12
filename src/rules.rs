@@ -1,3 +1,5 @@
+pub mod wireworld;
+
 use crate::space::Space;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]

@@ -1,7 +1,7 @@
 use raylib::prelude::*;
 
 use crate::{
-    rules::{Cell, MooreNeighborhood, Neighborhood, Rule, RuleCondition, RuleSet},
+    rules::{Cell, Neighborhood, RuleSet},
     sim::Simulation,
 };
 
@@ -47,21 +47,7 @@ pub fn gui_main() {
         .title(&format!("Cellariella v{}", env!("CARGO_PKG_VERSION")))
         .build();
 
-    let ruleset = {
-        let mut ruleset = RuleSet::<MooreNeighborhood>::default();
-        ruleset.cell_rules.extend_from_slice(&[
-            Rule::Static,
-            Rule::Transition(Cell(2)),
-            Rule::Transition(Cell(3)),
-            Rule::Conditional(
-                RuleCondition::CountBetween(Cell(1), 1, 2),
-                Box::new(Rule::Transition(Cell(1))),
-                Box::new(Rule::Static),
-            ),
-        ]);
-        ruleset
-    };
-    let mut state = GuiState::new(ruleset);
+    let mut state = GuiState::new(crate::rules::wireworld::wireworld());
 
     const STEP_TIME: f64 = 0.150;
     let mut time = rl.get_time();
