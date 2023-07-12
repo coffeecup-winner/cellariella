@@ -1,15 +1,15 @@
 use crate::{
-    rules::{Cell, Neighborhood, RuleSet},
+    rules::{Cell, RuleSet},
     space::Space,
 };
 
-pub struct Simulation<N: Neighborhood> {
+pub struct Simulation {
     space: Space,
-    ruleset: RuleSet<N>,
+    ruleset: RuleSet,
 }
 
-impl<N: Neighborhood> Simulation<N> {
-    pub fn new(ruleset: RuleSet<N>) -> Self {
+impl Simulation {
+    pub fn new(ruleset: RuleSet) -> Self {
         Simulation {
             space: Space::new(),
             ruleset,

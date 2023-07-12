@@ -1,17 +1,17 @@
 use raylib::prelude::*;
 
 use crate::{
-    rules::{Cell, Neighborhood, RuleSet},
+    rules::{Cell, RuleSet},
     sim::Simulation,
 };
 
-struct GuiState<N: Neighborhood> {
-    sim: Simulation<N>,
+struct GuiState {
+    sim: Simulation,
     current_cell: Cell,
 }
 
-impl<N: Neighborhood> GuiState<N> {
-    pub fn new(ruleset: RuleSet<N>) -> Self {
+impl GuiState {
+    pub fn new(ruleset: RuleSet) -> Self {
         GuiState {
             sim: Simulation::new(ruleset),
             current_cell: Cell(0),

@@ -1,5 +1,10 @@
 use crate::rules::Cell;
 
+#[derive(Clone, Copy, Debug)]
+pub enum Neighborhood {
+    Moore,
+}
+
 #[derive(Clone)]
 pub struct Space {
     // 4 space quadrants
@@ -94,5 +99,39 @@ impl Space {
                 self.q_sw[(-x) as usize + (-y) as usize * BLOCK_SIZE] = cell;
             }
         }
+    }
+
+    pub fn count(&self, x0: i64, y0: i64, cell: Cell, neighborhood: Neighborhood) -> u8 {
+        let mut sum = 0;
+        self.iterate_neighbors(neighborhood, x0, y0, |x, y| {
+            if self.get(x, y) == cell {
+                sum += 1;
+            }
+        });
+        sum
+    }
+
+    fn iterate_neighbors(
+        &self,
+        neighborhood: Neighborhood,
+        x: i64,
+        y: i64,
+        f: impl FnMut(i64, i64),
+    ) {
+        match neighborhood {
+            Neighborhood::Moore => self.iterate_neighbors_moore(x, y, f),
+        }
+    }
+
+    fn iterate_neighbors_moore(&self, x: i64, y: i64, mut f: impl FnMut(i64, i64)) {
+        f(x - 1, y - 1);
+        f(x, y - 1);
+        f(x + 1, y - 1);
+        f(x - 1, y);
+        f(x, y);
+        f(x + 1, y);
+        f(x - 1, y + 1);
+        f(x, y + 1);
+        f(x + 1, y + 1);
     }
 }

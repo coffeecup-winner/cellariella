@@ -1,6 +1,6 @@
 pub mod wireworld;
 
-use crate::space::Space;
+use crate::space::{Neighborhood, Space};
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct Cell(pub u8);
@@ -11,10 +11,10 @@ pub enum RuleCondition {
 }
 
 impl RuleCondition {
-    pub fn test(&self, x: i64, y: i64, space: &Space, neighborhood: &impl Neighborhood) -> bool {
+    pub fn test(&self, x: i64, y: i64, space: &Space, neighborhood: Neighborhood) -> bool {
         match self {
             RuleCondition::CountBetween(cell, from, to) => {
-                let count = neighborhood.count(x, y, *cell, space);
+                let count = space.count(x, y, *cell, neighborhood);
                 count >= *from && count <= *to
             }
         }
@@ -35,7 +35,7 @@ impl Rule {
         y: i64,
         cell: Cell,
         space: &Space,
-        neighborhood: &impl Neighborhood,
+        neighborhood: Neighborhood,
     ) -> Cell {
         match self {
             Rule::Static => cell,
@@ -51,13 +51,20 @@ impl Rule {
     }
 }
 
-#[derive(Default, Clone, Debug)]
-pub struct RuleSet<N: Neighborhood> {
+#[derive(Clone, Debug)]
+pub struct RuleSet {
     pub cell_rules: Vec<Rule>,
-    neighborhood: N,
+    neighborhood: Neighborhood,
 }
 
-impl<N: Neighborhood> RuleSet<N> {
+impl RuleSet {
+    pub fn new(neighborhood: Neighborhood, rules: &[Rule]) -> Self {
+        RuleSet {
+            cell_rules: rules.to_vec(),
+            neighborhood,
+        }
+    }
+
     pub fn apply(&self, space: &mut Space) {
         // TODO: take space size and cells into account
         for x in -128..127 {
@@ -68,7 +75,7 @@ impl<N: Neighborhood> RuleSet<N> {
                     y,
                     old_cell,
                     space,
-                    &self.neighborhood,
+                    self.neighborhood,
                 );
                 space.set_new(x, y, new_cell);
             }
@@ -76,33 +83,9 @@ impl<N: Neighborhood> RuleSet<N> {
     }
 }
 
-pub trait Neighborhood: Default {
-    fn iterate_neighbors(&self, x: i64, y: i64, f: impl FnMut(i64, i64));
-
-    fn count(&self, x0: i64, y0: i64, cell: Cell, space: &Space) -> u8 {
-        let mut sum = 0;
-        self.iterate_neighbors(x0, y0, |x, y| {
-            if space.get(x, y) == cell {
-                sum += 1;
-            }
-        });
-        sum
-    }
-}
-
-#[derive(Default)]
-pub struct MooreNeighborhood;
-
-impl Neighborhood for MooreNeighborhood {
-    fn iterate_neighbors(&self, x: i64, y: i64, mut f: impl FnMut(i64, i64)) {
-        f(x - 1, y - 1);
-        f(x, y - 1);
-        f(x + 1, y - 1);
-        f(x - 1, y);
-        f(x, y);
-        f(x + 1, y);
-        f(x - 1, y + 1);
-        f(x, y + 1);
-        f(x + 1, y + 1);
+pub fn create_ruleset(ruleset: &str) -> Option<RuleSet> {
+    match ruleset {
+        "wireworld" => Some(self::wireworld::wireworld()),
+        _ => None,
     }
 }
