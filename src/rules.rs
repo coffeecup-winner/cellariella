@@ -67,8 +67,8 @@ impl RuleSet {
 
     pub fn apply(&self, space: &mut Space) {
         // TODO: take space size and cells into account
-        for x in -128..127 {
-            for y in -128..127 {
+        for x in -128..128 {
+            for y in -128..128 {
                 let old_cell = space.get(x, y);
                 let new_cell = self.cell_rules[old_cell.0 as usize].apply(
                     x,

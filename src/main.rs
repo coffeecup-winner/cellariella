@@ -10,8 +10,10 @@ mod space;
 
 #[derive(Parser, Debug)]
 struct Args {
+    /// Ruleset (e.g. wireworld)
     #[arg(short, long)]
     ruleset: String,
+    /// Run analysis instead of launching the GUI
     #[arg(short, long)]
     analyze: bool,
 }
@@ -22,9 +24,11 @@ fn main() {
     let args = Args::parse();
 
     if args.analyze {
-        let _result = crate::analysis::analyze(
-            &crate::rules::create_ruleset(&args.ruleset).expect("Unknown ruleset"),
+        let result = crate::analysis::analyze(
+            crate::rules::create_ruleset(&args.ruleset).expect("Unknown ruleset"),
         );
+        print!("{}", result);
+        return;
     }
 
     gui_main();
