@@ -116,6 +116,11 @@ pub fn gui_main() {
                         state.sim.step();
                     }
                 }
+                KeyboardKey::KEY_R => {
+                    state
+                        .sim
+                        .randomize(-FIELD_SIZE, FIELD_SIZE, -FIELD_SIZE, FIELD_SIZE);
+                }
                 _ => {}
             }
         }
