@@ -1,3 +1,4 @@
+pub mod life;
 pub mod wireworld;
 
 use crate::space::{Neighborhood, Space};
@@ -85,6 +86,7 @@ impl RuleSet {
 
 pub fn create_ruleset(ruleset: &str) -> Option<RuleSet> {
     match ruleset {
+        "life" => Some(self::life::life()),
         "wireworld" => Some(self::wireworld::wireworld()),
         _ => None,
     }
