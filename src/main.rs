@@ -31,5 +31,5 @@ fn main() {
         return;
     }
 
-    gui_main();
+    gui_main(crate::rules::create_ruleset(&args.ruleset).expect("Unknown ruleset"));
 }

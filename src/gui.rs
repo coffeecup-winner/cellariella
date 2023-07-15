@@ -34,7 +34,7 @@ fn palette(cell_idx: u8) -> Color {
     }
 }
 
-pub fn gui_main() {
+pub fn gui_main(ruleset: RuleSet) {
     logging::set_trace_log(TraceLogLevel::LOG_WARNING);
 
     const WIDTH: i32 = 1024;
@@ -47,7 +47,7 @@ pub fn gui_main() {
         .title(&format!("Cellariella v{}", env!("CARGO_PKG_VERSION")))
         .build();
 
-    let mut state = GuiState::new(crate::rules::wireworld::wireworld());
+    let mut state = GuiState::new(ruleset);
 
     const STEP_TIME: f64 = 0.150;
     let mut time = rl.get_time();
