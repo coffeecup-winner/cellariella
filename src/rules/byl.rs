@@ -1,3 +1,5 @@
+use crate::sim::Simulation;
+
 use super::*;
 
 // Implementation based on https://www.asa3.org/ASA/PSCF/1989/PSCF3-89Byl.html
@@ -171,4 +173,19 @@ fn get_next_cw_from_smallest(
         result = 0;
     }
     Cell(result)
+}
+
+pub fn create_initial_state(sim: &mut Simulation) {
+    sim.set(1, 0, Cell(2));
+    sim.set(2, 0, Cell(2));
+    sim.set(0, 1, Cell(2));
+    sim.set(1, 1, Cell(6));
+    sim.set(2, 1, Cell(3));
+    sim.set(3, 1, Cell(2));
+    sim.set(0, 2, Cell(2));
+    sim.set(1, 2, Cell(6));
+    sim.set(2, 2, Cell(4));
+    sim.set(3, 2, Cell(2));
+    sim.set(1, 3, Cell(2));
+    sim.set(2, 3, Cell(5));
 }

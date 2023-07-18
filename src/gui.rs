@@ -34,7 +34,7 @@ fn palette(cell_idx: u8) -> Color {
     }
 }
 
-pub fn gui_main(ruleset: RuleSet) {
+pub fn gui_main(ruleset: RuleSet, set_up: impl FnOnce(&mut Simulation)) {
     logging::set_trace_log(TraceLogLevel::LOG_WARNING);
 
     const WIDTH: i32 = 1024;
@@ -49,7 +49,9 @@ pub fn gui_main(ruleset: RuleSet) {
 
     let mut state = GuiState::new(ruleset);
 
-    const STEP_TIME: f64 = 0.150;
+    set_up(&mut state.sim);
+
+    const STEP_TIME: f64 = 0.100;
     let mut time = rl.get_time();
     let mut autostep = false;
     while !rl.window_should_close() {

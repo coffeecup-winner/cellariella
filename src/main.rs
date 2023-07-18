@@ -23,13 +23,19 @@ fn main() {
 
     let args = Args::parse();
 
+    let ruleset = crate::rules::create_ruleset(&args.ruleset).expect("Unknown ruleset");
+
     if args.analyze {
-        let result = crate::analysis::analyze(
-            crate::rules::create_ruleset(&args.ruleset).expect("Unknown ruleset"),
-        );
+        let result = crate::analysis::analyze(ruleset);
         print!("{}", result);
         return;
     }
 
-    gui_main(crate::rules::create_ruleset(&args.ruleset).expect("Unknown ruleset"));
+    if args.ruleset.as_str() == "byl" {
+        gui_main(ruleset, |sim| {
+            crate::rules::byl::create_initial_state(sim);
+        });
+    } else {
+        gui_main(ruleset, |_| {});
+    }
 }
