@@ -186,6 +186,7 @@ pub fn gui_main(ruleset: RuleSet, set_up: impl FnOnce(&mut Simulation)) {
             "  - Auto step: <Shift+Space>".to_owned(),
             "  - Pick cell: <0..9>".to_owned(),
             "  - Randomize all: <R>".to_owned(),
+            format!("Current simulation step: {}", state.sim.current_step()),
             "Logical mouse coords:".to_owned(),
             format!("  - x: {}", mouse_pos_space_x),
             format!("  - y: {}", mouse_pos_space_y),

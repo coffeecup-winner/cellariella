@@ -8,6 +8,7 @@ pub enum Neighborhood {
 
 #[derive(Clone)]
 pub struct Space {
+    current_step: u64,
     // 4 space quadrants
     q_ne: Vec<Cell>,
     q_se: Vec<Cell>,
@@ -27,6 +28,7 @@ const SPACE_SIZE: usize = BLOCK_SIZE * BLOCK_SIZE;
 impl Space {
     pub fn new() -> Self {
         Space {
+            current_step: 0,
             q_ne: vec![Cell(0); SPACE_SIZE],
             q_se: vec![Cell(0); SPACE_SIZE],
             q_nw: vec![Cell(0); SPACE_SIZE],
@@ -38,11 +40,16 @@ impl Space {
         }
     }
 
+    pub fn current_step(&self) -> u64 {
+        self.current_step
+    }
+
     pub fn finalize_step(&mut self) {
         std::mem::swap(&mut self.q_ne, &mut self.new_q_ne);
         std::mem::swap(&mut self.q_se, &mut self.new_q_se);
         std::mem::swap(&mut self.q_nw, &mut self.new_q_nw);
         std::mem::swap(&mut self.q_sw, &mut self.new_q_sw);
+        self.current_step += 1;
     }
 
     #[allow(clippy::collapsible_else_if)]

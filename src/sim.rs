@@ -20,6 +20,10 @@ impl Simulation {
         self.ruleset.cell_rules.len()
     }
 
+    pub fn current_step(&self) -> u64 {
+        self.space.current_step()
+    }
+
     pub fn get(&self, x: i64, y: i64) -> Cell {
         self.space.get(x, y)
     }
