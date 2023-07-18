@@ -57,7 +57,14 @@ pub fn gui_main(ruleset: RuleSet, set_up: impl FnOnce(&mut Simulation)) {
     while !rl.window_should_close() {
         // ===== HIT TEST =====
 
-        // TODO
+        const CELL_SIZE: i32 = 12;
+        const FIELD_SIZE: i64 = 32;
+
+        let mouse_pos = rl.get_mouse_position();
+        let mouse_pos_space_x =
+            (mouse_pos.x as i64 - MARGIN as i64) / CELL_SIZE as i64 - FIELD_SIZE;
+        let mouse_pos_space_y =
+            (mouse_pos.y as i64 - MARGIN as i64) / CELL_SIZE as i64 - FIELD_SIZE;
 
         // ===== INTERACTION =====
 
@@ -112,15 +119,6 @@ pub fn gui_main(ruleset: RuleSet, set_up: impl FnOnce(&mut Simulation)) {
                 _ => {}
             }
         }
-
-        const CELL_SIZE: i32 = 12;
-        const FIELD_SIZE: i64 = 32;
-
-        let mouse_pos = rl.get_mouse_position();
-        let mouse_pos_space_x =
-            (mouse_pos.x as i64 - MARGIN as i64) / CELL_SIZE as i64 - FIELD_SIZE;
-        let mouse_pos_space_y =
-            (mouse_pos.y as i64 - MARGIN as i64) / CELL_SIZE as i64 - FIELD_SIZE;
 
         if rl.is_mouse_button_down(MouseButton::MOUSE_LEFT_BUTTON) {
             state
@@ -191,6 +189,10 @@ pub fn gui_main(ruleset: RuleSet, set_up: impl FnOnce(&mut Simulation)) {
             "Logical mouse coords:".to_owned(),
             format!("  - x: {}", mouse_pos_space_x),
             format!("  - y: {}", mouse_pos_space_y),
+            format!(
+                "  - Cell: {}",
+                state.sim.get(mouse_pos_space_x, mouse_pos_space_y).0
+            ),
         ];
 
         for (idx, line) in lines.iter().enumerate() {
