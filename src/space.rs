@@ -3,6 +3,7 @@ use crate::rules::Cell;
 #[derive(Clone, Copy, Debug)]
 pub enum Neighborhood {
     Moore,
+    VonNeumann,
 }
 
 #[derive(Clone)]
@@ -111,7 +112,7 @@ impl Space {
         sum
     }
 
-    fn iterate_neighbors(
+    pub fn iterate_neighbors(
         &self,
         neighborhood: Neighborhood,
         x: i64,
@@ -120,6 +121,7 @@ impl Space {
     ) {
         match neighborhood {
             Neighborhood::Moore => self.iterate_neighbors_moore(x, y, f),
+            Neighborhood::VonNeumann => self.iterate_neighbors_von_neumann(x, y, f),
         }
     }
 
@@ -133,5 +135,12 @@ impl Space {
         f(x - 1, y + 1);
         f(x, y + 1);
         f(x + 1, y + 1);
+    }
+
+    fn iterate_neighbors_von_neumann(&self, x: i64, y: i64, mut f: impl FnMut(i64, i64)) {
+        f(x, y - 1);
+        f(x + 1, y);
+        f(x, y + 1);
+        f(x - 1, y);
     }
 }

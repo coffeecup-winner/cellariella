@@ -1,3 +1,4 @@
+pub mod byl;
 pub mod life;
 pub mod wireworld;
 
@@ -27,6 +28,11 @@ pub enum Rule {
     Static,
     Transition(Cell),
     Conditional(RuleCondition, Box<Rule>, Box<Rule>),
+    Custom(fn(i64, i64, Cell, &Space, Neighborhood) -> Cell),
+    TryCustom(
+        fn(i64, i64, Cell, &Space, Neighborhood) -> Option<Cell>,
+        Box<Rule>,
+    ),
 }
 
 impl Rule {
@@ -48,11 +54,14 @@ impl Rule {
                     otherwise.apply(x, y, cell, space, neighborhood)
                 }
             }
+            Rule::Custom(f) => f(x, y, cell, space, neighborhood),
+            Rule::TryCustom(f, default) => f(x, y, cell, space, neighborhood)
+                .unwrap_or_else(|| default.apply(x, y, cell, space, neighborhood)),
         }
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct RuleSet {
     pub cell_rules: Vec<Rule>,
     neighborhood: Neighborhood,
@@ -86,6 +95,7 @@ impl RuleSet {
 
 pub fn create_ruleset(ruleset: &str) -> Option<RuleSet> {
     match ruleset {
+        "byl" => Some(self::byl::byl()),
         "life" => Some(self::life::life()),
         "wireworld" => Some(self::wireworld::wireworld()),
         _ => None,
